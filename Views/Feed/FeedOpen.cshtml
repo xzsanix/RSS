@@ -1,0 +1,26 @@
+﻿@model IEnumerable<RSS.Models.Feed>
+
+<input type="button" value="Reload" onClick="document.location.reload(true)">
+
+<div class="text-center">
+    <h4 class="display-4">RSS feeds for: @ViewBag.Title</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    RSS Feeds
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (KeyValuePair<string, string> item in ViewBag.Dictionary)
+            {
+                <tr>
+                    <td>
+                        <a href="@item.Value" target="_blank">@item.Key</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
