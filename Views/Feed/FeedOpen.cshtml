@@ -14,13 +14,13 @@
         </thead>
         <tbody>
             @foreach (KeyValuePair<string, string> item in ViewBag.Dictionary)
-            {
+             {
                 <tr>
                     <td>
                         <a href="@item.Value" target="_blank">@item.Key</a>
                     </td>
                 </tr>
-            }
+             }
         </tbody>
     </table>
 </div>

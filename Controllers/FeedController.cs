@@ -69,6 +69,8 @@ namespace RSS.Controllers
                         link = reader.Value;
                     }
                 }
+                
+                Response.Cookies.Append("Viewed", link);
 
                 if (title != "" && link != "" && !OneItem.ContainsKey(title))
                 {
@@ -81,8 +83,17 @@ namespace RSS.Controllers
 
             ViewBag.Dictionary = OneItem;
             ViewBag.Title = feed.Url;
+            
+            
+
+            /*if (Request.Cookies["Viewed"])
+            {
+
+            } */
+
 
             return View();
+
         }
 
         // GET: Feed/Create
@@ -96,7 +107,7 @@ namespace RSS.Controllers
         // POST: Feed/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Url,Category")] Feed feed)
+        public async Task<IActionResult> Create([Bind("Id,Url,CategoryId")] Feed feed)
         {
             ViewBag.Category = new SelectList(data.Categories, "Id", "Title");
 
@@ -132,7 +143,7 @@ namespace RSS.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Url, Category")] Feed feed)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Url, CategoryId")] Feed feed)
         {
             ViewBag.Category = new SelectList(data.Categories, "Id", "Title");
 
@@ -164,7 +175,7 @@ namespace RSS.Controllers
             return View(feed);
         }
 
-        // GET: Szalloda/Delete/5
+        // GET: Feed/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -182,7 +193,7 @@ namespace RSS.Controllers
             return View(feed);
         }
 
-        // POST: Szalloda/Delete/5
+        // POST: Feed/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
