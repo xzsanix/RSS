@@ -1,0 +1,21 @@
+<?xml version="1.0" standalone="yes"?>
+<NewDataSet>
+  <Category>
+    <Title>Sport                                             </Title>
+  </Category>
+  <Category>
+    <Title>Szórakozás                                        </Title>
+  </Category>
+  <Category>
+    <Title>Zene                                              </Title>
+  </Category>
+  <Category>
+    <Title>Politika                                          </Title>
+  </Category>
+<Category>
+    <Title>asd</Title>
+  </Category>
+<Category>
+    <Title>xyz</Title>
+  </Category>
+</NewDataSet>

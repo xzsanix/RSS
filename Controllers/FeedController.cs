@@ -83,14 +83,6 @@ namespace RSS.Controllers
 
             ViewBag.Dictionary = OneItem;
             ViewBag.Title = feed.Url;
-            
-            
-
-            /*if (Request.Cookies["Viewed"])
-            {
-
-            } */
-
 
             return View();
 

@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using RSS.Models;
-using System;
-using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,10 +13,34 @@ namespace RSS.Controllers
         Data data = new Data();
         public IActionResult Index()
         {
-            Data data = new Data();
-
-            
             return View(data.Categories);
+        }
+
+        public ActionResult Export()
+        {
+            SqlConnection con = new SqlConnection("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=C:\\USERS\\ASUST\\ONEDRIVE\\DOKUMENTUMOK\\DATABASE.MDF;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False;");
+            string strSQL = "Select Title from Category";
+            SqlDataAdapter dt = new SqlDataAdapter(strSQL, con);
+
+            DataSet ds = new DataSet();
+            dt.Fill(ds, "Category");
+            ds.WriteXml("categories.opml"); //project mappajaba menti le
+
+            return View("Views/Category/Index.cshtml", data.Categories);
+        }
+
+        public ActionResult Import()
+        {
+            SqlConnection con = new SqlConnection("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=C:\\USERS\\ASUST\\ONEDRIVE\\DOKUMENTUMOK\\DATABASE.MDF;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False;");
+            string strSQL = "SELECT * FROM Category UPDATE Category SET Title = (SELECT * FROM OPENROWSET(BULK 'D:\\Users\\asust\\source\\repos\\RSS\\cat.opml', SINGLE_BLOB) AS x)  WHERE IntCol = 1; GO";
+            SqlDataAdapter dt = new SqlDataAdapter(strSQL, con);
+            DataSet ds = new DataSet();
+            ds.ReadXml("cat.opml");
+   
+            SqlBulkCopy sbc = new SqlBulkCopy(con);
+            sbc.DestinationTableName = "Category";
+
+            return View("Views/Category/Index.cshtml", data.Categories);
         }
 
         // GET: Category/Details/5
