@@ -2,9 +2,11 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using RSS.Models;
+using System;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace RSS.Controllers
 {
@@ -29,37 +31,31 @@ namespace RSS.Controllers
             return View("Views/Category/Index.cshtml", data.Categories);
         }
 
-        public ActionResult Import()
+        public ActionResult Import([Bind("Id,Title")] Category category)
         {
-            SqlConnection con = new SqlConnection("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=C:\\USERS\\ASUST\\ONEDRIVE\\DOKUMENTUMOK\\DATABASE.MDF;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False;");
-            string strSQL = "SELECT * FROM Category UPDATE Category SET Title = (SELECT * FROM OPENROWSET(BULK 'D:\\Users\\asust\\source\\repos\\RSS\\cat.opml', SINGLE_BLOB) AS x)  WHERE IntCol = 1; GO";
-            SqlDataAdapter dt = new SqlDataAdapter(strSQL, con);
-            DataSet ds = new DataSet();
-            ds.ReadXml("cat.opml");
-   
-            SqlBulkCopy sbc = new SqlBulkCopy(con);
-            sbc.DestinationTableName = "Category";
+            Random rnd = new Random();
+            XmlTextReader reader = new XmlTextReader("cat.opml");
+
+            while (reader.Read())
+            {
+                if (reader.NodeType == XmlNodeType.Element && reader.LocalName == "Title")
+                {
+                    reader.Read();
+                    if ((reader.NodeType == XmlNodeType.Text) && (reader.HasValue))
+                    {
+                        category.Title = reader.Value;
+
+                        data.Add(category);
+                        data.SaveChanges();
+
+                    }
+
+                }
+            }
 
             return View("Views/Category/Index.cshtml", data.Categories);
         }
 
-        // GET: Category/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var category = await data.Categories
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (category == null)
-            {
-                return NotFound();
-            }
-
-            return View(category);
-        }
 
         // GET: Category/Create
         public IActionResult Create()
