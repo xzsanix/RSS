@@ -33,7 +33,6 @@ namespace RSS.Controllers
 
         public ActionResult Import([Bind("Id,Title")] Category category)
         {
-            Random rnd = new Random();
             XmlTextReader reader = new XmlTextReader("cat.opml");
 
             while (reader.Read())
@@ -43,13 +42,22 @@ namespace RSS.Controllers
                     reader.Read();
                     if ((reader.NodeType == XmlNodeType.Text) && (reader.HasValue))
                     {
-                        category.Title = reader.Value;
+                        foreach (var categ in data.Categories)
+                        {
+                            if (categ.Title == reader.Value)
+                            {
+                                reader.Read();
+                            }
+                            else
+                            {
+                                category.Title = reader.Value;
+                                _ = Create(category);
 
-                        data.Add(category);
-                        data.SaveChanges();
-
+                              //  data.Add(category);
+                              //  data.SaveChanges();
+                            }
+                        }
                     }
-
                 }
             }
 

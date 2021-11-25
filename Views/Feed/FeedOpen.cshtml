@@ -1,6 +1,31 @@
 ﻿@model IEnumerable<RSS.Models.Feed>
+@using System.Net;
+@using System.Web;
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using Microsoft.AspNetCore.Http
+
+<!--
+{
+    HttpContextAccessor accessor = new HttpContextAccessor();
+
+    accessor.HttpContext.Response.Cookies.Append("asd", item.Value);
+
+}
+
+
+
+<script>
+    var links = [];
+    function getUrl(e) {
+        links.push(e.getAttribute("href"));
+        document.cookie = "viewed=" + JSON.stringify(links);
+    }
+</script>
+
+-->
 
 <input type="button" value="Reload" onClick="document.location.reload(true)">
+
 
 <div class="text-center">
     <h4 class="display-4">RSS feeds for: @ViewBag.Title</h4>
@@ -13,14 +38,30 @@
             </tr>
         </thead>
         <tbody>
+
+
             @foreach (KeyValuePair<string, string> item in ViewBag.Dictionary)
-             {
+            {
+
+                object Download()
+                {
+                    using (WebClient client = new WebClient())
+                    {
+                        client.DownloadFile(item.Value, item.Key.ToString() + ".html");
+                    }
+                    return "Letöltés";
+                }
+
                 <tr>
                     <td>
-                        <a href="@item.Value" target="_blank">@item.Key</a>
+
+                        <a id="link" href="@item.Value" onclick="getUrl(this); return true;" target="_blank">@item.Key</a>
+
+                        <button onclick="@Download()"> Letöltés </button>
+
                     </td>
                 </tr>
-             }
+            }
         </tbody>
     </table>
 </div>

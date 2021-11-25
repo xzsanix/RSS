@@ -1,19 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RSS.Models;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
-using System.ServiceModel.Syndication;
-using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using System.Xml.Linq;
-using System.Xml.Serialization;
 
 namespace RSS.Controllers
 {
@@ -69,8 +62,6 @@ namespace RSS.Controllers
                         link = reader.Value;
                     }
                 }
-                
-                Response.Cookies.Append("Viewed", link);
 
                 if (title != "" && link != "" && !OneItem.ContainsKey(title))
                 {
@@ -83,6 +74,10 @@ namespace RSS.Controllers
 
             ViewBag.Dictionary = OneItem;
             ViewBag.Title = feed.Url;
+
+            var cookies = Request.Cookies["viewed"];
+
+
 
             return View();
 
@@ -202,5 +197,4 @@ namespace RSS.Controllers
         }
 
     }
-
 }
