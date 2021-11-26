@@ -3,17 +3,9 @@
 @using System.Web;
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 @using Microsoft.AspNetCore.Http
+@using RSS.Controllers;
 
 <!--
-{
-    HttpContextAccessor accessor = new HttpContextAccessor();
-
-    accessor.HttpContext.Response.Cookies.Append("asd", item.Value);
-
-}
-
-
-
 <script>
     var links = [];
     function getUrl(e) {
@@ -43,21 +35,23 @@
             @foreach (KeyValuePair<string, string> item in ViewBag.Dictionary)
             {
 
-                object Download()
+               /* void Download()
                 {
                     using (WebClient client = new WebClient())
                     {
                         client.DownloadFile(item.Value, item.Key.ToString() + ".html");
                     }
                     return "Letöltés";
-                }
+                } */
 
                 <tr>
                     <td>
 
-                        <a id="link" href="@item.Value" onclick="getUrl(this); return true;" target="_blank">@item.Key</a>
+                        <a href="@item.Value" onclick="getUrl(this); return true;" target="_blank">@item.Key</a>
 
-                        <button onclick="@Download()"> Letöltés </button>
+                        <form  asp-action="Download">
+                            <input type="submit" value="Download" class="btn btn-danger" /> |
+                        </form>
 
                     </td>
                 </tr>

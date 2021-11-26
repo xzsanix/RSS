@@ -1,18 +1,15 @@
 <?xml version="1.0" standalone="yes"?>
 <NewDataSet>
   <Category>
-    <Title>Sport                                             </Title>
+    <Title>Earth                                             </Title>
   </Category>
   <Category>
-    <Title>Szórakozás                                        </Title>
+    <Title>Breaking news                                     </Title>
   </Category>
   <Category>
-    <Title>Zene                                              </Title>
+    <Title>Design                                            </Title>
   </Category>
   <Category>
-    <Title>Politika                                          </Title>
-  </Category>
-  <Category>
-    <Title>Nasa                                              </Title>
+    <Title>Food                                              </Title>
   </Category>
 </NewDataSet>

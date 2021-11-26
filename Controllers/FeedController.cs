@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RSS.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -24,6 +25,9 @@ namespace RSS.Controllers
             return View(query.ToList());
         }
 
+
+
+
         public async Task<IActionResult> FeedOpen(int? id)
         {
 
@@ -39,6 +43,7 @@ namespace RSS.Controllers
             XmlTextReader reader = new XmlTextReader(feedUrl);
 
             Dictionary<string, string> OneItem = new Dictionary<string, string>();
+
 
             var title = "";
             var link = "";
@@ -75,14 +80,25 @@ namespace RSS.Controllers
             ViewBag.Dictionary = OneItem;
             ViewBag.Title = feed.Url;
 
-            var cookies = Request.Cookies["viewed"];
-
-
+            //  var cookies = Request.Cookies["viewed"];
 
             return View();
-
         }
 
+   /*     [HttpPost, ActionName("Download")]
+        public ActionResult Download()
+        {
+            foreach (var item in ViewBag.Dictionary)
+            {
+                using (WebClient client = new WebClient())
+                {
+                    client.DownloadFile(item.Value, item.Key + ".html");
+                }
+            }
+
+            return View("Views/Feed/FeedOpen.cshtml", data.Feeds);
+        }
+   */
         // GET: Feed/Create
         public IActionResult Create()
         {

@@ -1,9 +1,9 @@
 <?xml version="1.0" standalone="yes"?>
-<NewDataSet>
-<Category>
-    <Title>asd</Title>
-  </Category>
-<Category>
-    <Title>xyz</Title>
-  </Category>
-</NewDataSet>
+<Categories>
+    <Category>
+        <Title>asd</Title>
+    </Category>
+    <Category>
+        <Title>xyz</Title>
+    </Category>
+</Categories>

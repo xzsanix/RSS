@@ -4,9 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using RSS.Models;
 using System;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Serialization;
 
 namespace RSS.Controllers
 {
@@ -31,40 +33,49 @@ namespace RSS.Controllers
             return View("Views/Category/Index.cshtml", data.Categories);
         }
 
-        public ActionResult Import([Bind("Id,Title")] Category category)
+        public async Task<IActionResult> Import()
         {
-            XmlTextReader reader = new XmlTextReader("cat.opml");
+            XmlSerializer serializer = new XmlSerializer(typeof(Categories));
+            FileStream reader = new FileStream(@"D:\Users\asust\source\repos\RSS\cat.opml", FileMode.Open);
+            Categories categories = (Categories)serializer.Deserialize(reader);
+            reader.Close();
 
-            while (reader.Read())
+            foreach (var category in categories.C_Items)
             {
-                if (reader.NodeType == XmlNodeType.Element && reader.LocalName == "Title")
-                {
-                    reader.Read();
-                    if ((reader.NodeType == XmlNodeType.Text) && (reader.HasValue))
-                    {
-                        foreach (var categ in data.Categories)
-                        {
-                            if (categ.Title == reader.Value)
-                            {
-                                reader.Read();
-                            }
-                            else
-                            {
-                                category.Title = reader.Value;
-                                _ = Create(category);
+                data.Add(category);
+                await data.SaveChangesAsync();
 
-                              //  data.Add(category);
-                              //  data.SaveChanges();
-                            }
-                        }
-                    }
-                }
             }
 
             return View("Views/Category/Index.cshtml", data.Categories);
         }
 
+        /*
+          public async Task<IActionResult> Import()
+          {
+               XmlTextReader reader = new XmlTextReader("cat.opml");
+              Category category = new Category();
 
+               while (reader.Read())
+               {
+                   if (reader.NodeType == XmlNodeType.Element && reader.LocalName == "Title")
+                   {
+                       reader.Read();
+                       if ((reader.NodeType == XmlNodeType.Text) && (reader.HasValue))
+                       {
+
+                           category.Title = reader.Value;
+                           data.Add(category);
+                           await data.SaveChangesAsync();
+
+                       }
+                   }
+
+               }
+              return View("Views/Category/Index.cshtml", data.Categories);
+          }
+
+          */
         // GET: Category/Create
         public IActionResult Create()
         {
